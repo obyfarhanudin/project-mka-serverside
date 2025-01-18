@@ -1,0 +1,1479 @@
+<?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+//memuat autoloader
+require 'vendor/autoload.php';
+//membuat objek pertama
+$mail = new PHPMailer(true);
+
+//melakukan cek submit apakah form dengan id sudah dipost metode
+if (isset($_POST['submit'])) {
+   
+    $name = isset($_POST['name']) ? $_POST['name'] : '';
+    $email = isset($_POST['email']) ? $_POST['email'] : '';
+    $phone = isset($_POST['phone']) ? $_POST['phone'] : '';
+    $message = isset($_POST['message']) ? $_POST['message'] : '';
+
+    try {
+     
+        // ketika sudah akan mengeksekusi kode ini 
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;  
+        $mail->isSMTP(); 
+        $mail->Host = 'smtp.gmail.com'; 
+        $mail->SMTPAuth = true;  
+        $mail->Username = 'si-23021@students.ithb.ac.id'; 
+        $mail->Password = 'qbpy ogzt mkcc afwd';  
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;  
+        $mail->Port = 587;  
+     
+        $mail->setFrom('ferdiansyahrafael01@gmail.com', 'customer');
+        $mail->addAddress('miayampangsit01@gmail.com', 'Recipient Name');  
+
+    
+        $mail->isHTML(true);  
+        $mail->Subject = 'Formulir Pengguna Baru - Karoseri Mandiri Kerja Abadi';
+
+       
+        $mail->Body = '
+            <h2>Formulir Pengguna Baru Diterima</h2>
+            <p>Nama: ' . $name . '</p>
+            <p>Email: ' . $email . '</p>
+            <p>No. Telepon: ' . $phone . '</p>
+            <p>Pesan: ' . $message . '</p>
+            <p>Terima kasih telah menghubungi Karoseri Mandiri Kerja Abadi. Tim kami akan segera merespon permintaan Anda.</p>
+        ';
+
+        $mail->AltBody = '
+            Formulir Pengguna Baru Diterima
+
+            Nama: ' . $name . '
+            Email: ' . $email . '
+            No. Telepon: ' . $phone . '
+            Pesan: ' . $message . '
+
+            Terima kasih telah menghubungi Karoseri Mandiri Kerja Abadi. Tim kami akan segera merespon permintaan Anda.
+        ';
+
+    
+        $mail->send();
+        echo 'Pesan telah terkirim';
+    } catch (Exception $e) {
+        echo "Pesan gagal dikirim. Error: {$mail->ErrorInfo}";
+    }
+}
+
+include "koneksi.php";
+if (isset($_POST["submit"])) {
+
+    //Bagian kode ini digunakan untuk mengambil data yang dikirimkan melalui metode POST dari form,
+    $name = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
+    $phone = trim($_POST["phone"]);
+    $message = trim($_POST["message"]);
+
+   
+    if (!empty($name) && !empty($email) && !empty($phone) && !empty($message)) {
+        
+     //query
+        $sql = "INSERT INTO anggota (name, email, phone, message) VALUES (?, ?, ?, ?)";
+        $stmt = $db->prepare($sql);
+
+        if ($stmt === false) {
+         
+            echo "Error dalam persiapan query: " . $db->error;
+            exit();
+        }
+
+        
+        $stmt->bind_param("ssss", $name, $email, $phone, $message);
+
+       
+        if ($stmt->execute()) {
+            
+            echo "Data berhasil disimpan!";
+        } else {
+           
+            echo "Data gagal disimpan: " . $stmt->error;
+        }
+
+       
+        $stmt->close();
+    } else {
+        echo "Semua kolom harus diisi!";
+    }
+}
+?>
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <title>CV. Mandiri Kerja Abadi</title>
+        <meta name="description"
+            content="CV. Mandiri Kerja Abadi, berdiri sejak 30 Maret 2016, adalah perusahaan karoseri terkemuka dengan komitmen pada kualitas tinggi dan kepuasan pelanggan.">
+        <meta name="keywords"
+            content="CV Mandiri Kerja Abadi, karoseri, kendaraan niaga, transportasi, solusi berkualitas, engineer berpengalaman, Dinas Perhubungan, industri karoseri, standar kualitas, inovasi, kepuasan pelanggan, karoseri mojokerto">
+        <meta name="author" content="CV. Mandiri Kerja Abadi">
+        <meta name="robots" content="index, follow">
+        <meta property="og:title" content="CV. Mandiri Kerja Abadi - Karoseri Berkualitas Tinggi">
+        <meta property="og:description"
+            content="Dengan lebih dari 10 tahun pengalaman, CV. Mandiri Kerja Abadi menghadirkan solusi kendaraan niaga berkualitas tinggi, berkomitmen pada inovasi dan kepuasan pelanggan.">
+        <meta name="twitter:site" content="@MandiriKerjaAbadi">
+        <meta name="twitter:title" content="CV. Mandiri Kerja Abadi - Karoseri Berkualitas Tinggi">
+        <meta name="twitter:description"
+            content="CV. Mandiri Kerja Abadi menyediakan solusi kendaraan niaga berkualitas tinggi, didukung oleh pengalaman lebih dari 10 tahun dan komitmen pada kepuasan pelanggan.">
+
+        <!-- Favicons -->
+        <link href="assets/logo/fav2.png" rel="icon">
+
+        <!-- Fonts -->
+        <link href="https://fonts.googleapis.com" rel="preconnect">
+        <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet">
+
+        <!-- Vendor CSS Files -->
+        <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+        <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+        <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+        <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+        <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+        <!-- Main CSS File -->
+        <link href="assets/css/main.css" rel="stylesheet">
+
+        <script>
+            function createWhatsAppLink(number, message) {
+                const encodedMessage = encodeURIComponent(message);
+                return `https://wa.me/${number}?text=${encodedMessage}`;
+            }
+
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const number = '6281222228543';
+                const message = 'Halo! Saya tertarik dengan produk Anda.';
+                const links = document.querySelectorAll('#wa-link');
+
+                links.forEach(link => {
+                    link.href = createWhatsAppLink(number, message);
+                });
+            });
+        </script>
+
+    </head>
+
+    <body class="index-page">
+
+        <header id="header" class="header d-flex align-items-center fixed-top">
+            <div
+                class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
+
+                <a href="index.php" class="logo d-flex align-items-center">
+                    <img src="assets/logo/MKA-LOGO-WHITE.png" alt="cv-logo" style="max-height: 200px;">
+                </a>
+
+                <nav id="navmenu" class="navmenu">
+                    <ul>
+                        <li><a href="index.php" class="active">Beranda</a></li>
+                        <li><a href="about.html">Tentang Kami</a></li>
+                        <li><a href="services.html">Layanan</a></li>
+                        <li><a href="projects.html">Produk</a></li>
+                        <li><a href="blog.html">Artikel</a></li>
+                        <li><a href="galeri.html">Galeri</a></li>
+                        <li><a href="contact.html">Kontak</a></li>
+                        <li><a href="after-sales.php">Purna Jual</a></li>
+                    </ul>
+                    <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+                </nav>
+
+            </div>
+        </header>
+
+        <main class="main">
+
+            <!-- Hero Section -->
+            <section id="hero" class="hero section dark-background">
+
+                <div class="info d-flex align-items-center">
+                    <div class="container">
+                        <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="100">
+                            <div class="col-lg-10 text-center">
+                                <h2>Selamat Datang di <br> CV Mandiri Kerja Abadi</h2>
+                                <p>Mengutamakan Kualitas, Mengedepankan Integritas - Solusi Karoseri Terbaik Untuk
+                                    Kendaraan Anda</p>
+                                <a href="#get-started" class="btn-get-started">Bergabung Sekarang</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="hero-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
+                    <div class="carousel-item">
+                        <img src="assets/tambahan/MKA-COMPANY.png" alt="">
+                    </div>
+
+                    <div class="carousel-item active">
+                        <img src="assets/Foto/IMG_1512.JPG" alt="">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="assets/tambahan/MKA-TRUCK.png" alt="">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="assets/Foto Tambahan/IMG_1889.JPG" alt="">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="assets/Foto/IMG_1511.JPG" alt="">
+                    </div>
+
+                    <div class="carousel-item">
+                        <img src="assets/Foto Tambahan/IMG_1878.JPG" alt="">
+                    </div>
+
+                    <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+                    </a>
+
+                    <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+                    </a>
+
+                </div>
+
+            </section><!-- /Hero Section -->
+
+            <!-- Get Started Section -->
+            <section id="get-started" class="get-started section">
+
+                <div class="container">
+
+                    <div class="row justify-content-between gy-4">
+
+                        <div class="col-lg-6 d-flex align-items-center" data-aos="zoom-out" data-aos-delay="100">
+                            <div class="content">
+                                <h3>Bergabung Bersama Kami</h3>
+                                <p>Gabung Sekarang! Bersama kita membangun kualitas dan integritas dalam dunia karoseri.
+                                    Bergabunglah dengan komunitas CV
+                                    Mandiri Kerja Abadi dan dapatkan kesempatan untuk berbagi pengetahuan, pengalaman,
+                                    dan inovasi bersama para profesional
+                                    dan ahli di industri ini.
+                                </p>
+                                <p>
+                                    Mari kita ciptakan standar baru dalam karoseri dan jadilah
+                                    bagian dari perjalanan menuju
+                                    keunggulan. Bersama, kita bisa mencapai lebih banyak!
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-5" data-aos="zoom-out" data-aos-delay="200">
+                            <form method="POST" action="index.php" class="php-email-form" id="postAnggota">
+                                <h3>Masukkan Data Diri</h3>
+                                <div class="row gy-3">
+
+                                    <div class="col-12">
+                                        <input type="text" name="name" class="form-control" placeholder="Masukkan Nama"
+                                            required="" id="name">
+                                    </div>
+
+                                    <div class="col-12 ">
+                                        <input type="email" class="form-control" name="email"
+                                            placeholder="Masukkan Email" required="" id="email">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <input type="text" class="form-control" name="phone"
+                                            placeholder="Masukkan No Smartphone" required="" id="phone">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <textarea class="form-control" name="message" rows="6"
+                                            placeholder="Masukkan Alamat" required="" id="alamat"></textarea>
+                                    </div>
+
+                                   
+                                    <div class="col-12 text-center">
+                                        <div class="loading" style="display: none;">Loading...</div>
+                                        <div class="error-message" style="display: none;">Tambah Data Gagal</div>
+                                        <div class="sent-message" style="display: none;">Anda Sukses Bergabung Dengan
+                                            Kami</div>
+                                        <button type="submit" name="submit" id="submit">Simpan</button>
+                                    </div>
+
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section><!-- /Get Started Section -->
+
+            <!-- Constructions Section -->
+            <section id="constructions" class="constructions section">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 class="">Pekerjaan Unggulan</h2>
+                    <p>Kami melayani pembuatan produk-produk karoseri seperti Dump Truck, Tanki, Crane, Wing Box, Box
+                        Container, Trailer, Self
+                        Loader, Low Bed, Derek, Flat Deck, Dropside, Tangki Trailer, serta Jasa Repair Karoseri dan Jasa
+                        Pengecatan.</p>
+                </div><!-- End Section Title -->
+
+                <div class="container">
+
+                    <div class="row gy-4">
+
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="card-item">
+                                <div class="row">
+                                    <div class="col-xl-5">
+                                        <div class="card-bg"><img src="assets/Foto/IMG_1417.JPG" alt=""></div>
+                                    </div>
+                                    <div class="col-xl-7 d-flex align-items-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Dump Truck</h4>
+                                            <p>Ahli dalam merancang dan membuat Dump Truck yang tangguh dan andal untuk
+                                                kebutuhan berat Anda.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Card Item -->
+
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+                            <div class="card-item">
+                                <div class="row">
+                                    <div class="col-xl-5">
+                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1893.JPG" alt=""></div>
+                                    </div>
+                                    <div class="col-xl-7 d-flex align-items-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Repair Karoseri</h4>
+                                            <p>Perbaikan profesional dan berkualitas: Layanan repair karoseri yang
+                                                memastikan kendaraan Anda kembali berfungsi optimal
+                                                dan tampil seperti baru.</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Card Item -->
+
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+                            <div class="card-item">
+                                <div class="row">
+                                    <div class="col-xl-5">
+                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1812.JPG" alt=""></div>
+                                    </div>
+                                    <div class="col-xl-7 d-flex align-items-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Pengecatan Karoseri</h4>
+                                            <p>Pengecatan profesional dan tahan lama: Memberikan lapisan cat yang
+                                                berkualitas tinggi untuk melindungi dan memperindah
+                                                kendaraan Anda.</p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Card Item -->
+
+                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+                            <div class="card-item">
+                                <div class="row">
+                                    <div class="col-xl-5">
+                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1813.JPG" alt=""></div>
+                                    </div>
+                                    <div class="col-xl-7 d-flex align-items-center">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Pesanan Lainnya</h4>
+                                            <p>Menangani berbagai pesanan khusus: Menyediakan layanan karoseri untuk
+                                                berbagai jenis kebutuhan dan spesifikasi.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End Card Item -->
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Constructions Section -->
+
+            <!-- Alt Services Section -->
+            <section id="alt-services" class="alt-services section">
+
+                <div class="container">
+
+                    <div class="row justify-content-around gy-4">
+                        <div class="features-image col-lg-6" data-aos="fade-up" data-aos-delay="100"><img
+                                src="assets/tambahan/MKA-COMPANNY.png" alt=""></div>
+
+                        <div class="col-lg-5 d-flex flex-column justify-content-center" data-aos="fade-up"
+                            data-aos-delay="200">
+                            <h3>Kenapa Memilih Kami ? </h3>
+                            <p>Dengan pengalaman lebih dari 10 tahun, keahlian khusus pada setiap proses, dan komitmen
+                                pada kepuasan pelanggan, kami
+                                adalah mitra yang tepat untuk semua kebutuhan karoseri Anda.</p>
+
+                            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="300">
+                                <i class="fas fa-gem flex-shrink-0"></i>
+                                <div>
+                                    <h4><a href="" class="stretched-link">Material Berkualitas Tinggi</a></h4>
+                                    <p>Kami hanya menggunakan material pilihan yang berada di atas standar rata-rata
+                                        industri. Ini memastikan setiap kendaraan
+                                        yang kami produksi memiliki kekuatan dan daya tahan yang optimal, memberikan
+                                        performa terbaik di segala kondisi.
+                                    </p>
+                                </div>
+                            </div><!-- End Icon Box -->
+
+                            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="400">
+                                <i class="fas fa-user-tie flex-shrink-0"></i>
+                                <div>
+                                    <h4><a href="" class="stretched-link">Tim Ahli dan Berpengalaman</a></h4>
+                                    <p>Karoseri kami didukung oleh tim profesional yang ahli dan berpengalaman di
+                                        bidangnya. Dengan pengetahuan mendalam dan
+                                        dedikasi tinggi, tim kami memastikan setiap detail pengerjaan dilakukan dengan
+                                        presisi dan kualitas terbaik.
+                                    </p>
+                                </div>
+                            </div><!-- End Icon Box -->
+
+                            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="500">
+                                <i class="fas fa-envelope-open-text flex-shrink-0"></i>
+                                <div>
+                                    <h4><a href="" class="stretched-link">Proses Pengurusan Surat yang Cepat</a></h4>
+                                    <p>Kami memahami pentingnya efisiensi waktu bagi pelanggan. Oleh karena itu, kami
+                                        menjamin proses pengurusan surat-surat
+                                        kendaraan dilakukan dengan cepat dan tepat, sehingga Anda dapat segera
+                                        menggunakan kendaraan tanpa hambatan
+                                        administratif.</p>
+                                </div>
+                            </div><!-- End Icon Box -->
+
+                            <div class="icon-box d-flex position-relative" data-aos="fade-up" data-aos-delay="600">
+                                <i class="fas fa-tachometer-alt flex-shrink-0"></i>
+                                <div>
+                                    <h4><a href="" class="stretched-link">Pengerjaan Cepat</a></h4>
+                                    <p>Kami mengerti bahwa waktu adalah faktor penting dalam bisnis Anda. Dengan sistem
+                                        kerja yang efisien dan terorganisir,
+                                        kami memastikan setiap proyek diselesaikan dalam waktu yang singkat tanpa
+                                        mengorbankan kualitas, sehingga kendaraan Anda
+                                        dapat segera dioperasikan sesuai jadwal.</p>
+                                </div>
+                            </div><!-- End Icon Box -->
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </section><!-- /Alt Services Section -->
+
+            <!-- Features Cards Section -->
+            <section id="features-cards" class="features-cards section">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Produk Kami</h2>
+                    <p>Produk Terbaik Untuk Kebutuhan Anda</p>
+                </div><!-- End Section Title -->
+
+                <div class="container">
+
+                    <div class="row mb-3">
+                        <div class="col-12 text-end" data-aos="fade-up" data-aos-delay="100">
+                            <a href="projects.html" class="mb-3 text-end">
+                                Produk Lainnya
+                                <span>
+                                    <i class="fas fa-arrow-alt-circle-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row gy-4">
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <img src="assets/galeri/TERBARU BAHAN/WhatsApp Image 2024-08-29 at 19.47.04_239d7bc5.jpg"
+                                class="img-thumbnail border-0 mb-3" alt="Trailer" srcset="">
+                            <h3>Trailer</h3>
+                            <p>Solusi ideal untuk mengangkut beban berat dengan efisiensi dan keamanan. Dirancang untuk
+                                berbagai kebutuhan
+                                transportasi industri.</p>
+                            <ul class="list-unstyled mb-3">
+                                <li><i class="bi bi-check2"></i> <span>Kapasitas muatan besar</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Struktur kuat dan tahan lama</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Dapat diandalkan dalam berbagai kondisi</span>
+                                </li>
+                            </ul>
+
+                            <a id="wa-link" href="#" target="_blank" class="btn-get-features">Hubungi Sekarang</a>
+                        </div><!-- End feature item-->
+
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="200">
+                            <img src="assets/Foto/IMG_0663.jpg" class="img-thumbnail border-0 mb-3" alt="Tangki"
+                                srcset="">
+                            <h3>Tangki</h3>
+                            <p>Dirancang untuk menyimpan dan mengangkut berbagai jenis cairan dengan aman. Solusi tepat
+                                untuk kebutuhan
+                                penyimpanan industri Anda.</p>
+                            <ul class="list-unstyled mb-3">
+                                <li><i class="bi bi-check2"></i> <span>Material berkualitas tinggi</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Sistem keamanan terjamin</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Beragam kapasitas tersedia</span></li>
+
+                                <a id="wa-link" href="#" target="_blank" class="btn-get-features">Hubungi Sekarang</a>
+                            </ul>
+                        </div><!-- End feature item-->
+
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="300">
+                            <img src="assets/Foto/IMG_1419.JPG" class="img-thumbnail border-0 mb-3" alt="Dump"
+                                srcset="">
+                            <h3>Dump</h3>
+                            <p>Sempurna untuk mengangkut material konstruksi dengan efisien. Desain yang kokoh dan tahan
+                                lama untuk pekerjaan
+                                berat Anda.</p>
+                            <ul class="list-unstyled mb-3">
+                                <li><i class="bi bi-check2"></i> <span>Mudah digunakan dan dipelihara</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Kapasitas besar untuk material berat</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Struktur yang tahan lama</span></li>
+
+                                <a id="wa-link" href="#" target="_blank" class="btn-get-features">Hubungi Sekarang</a>
+                            </ul>
+                        </div><!-- End feature item-->
+
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="400">
+                            <img src="assets/Foto/IMG_2908.JPG" class="img-thumbnail border-0 mb-3" alt="Self Loader"
+                                srcset="">
+                            <h3>Self Loader</h3>
+                            <p>Mudah mengangkut dan memuat alat berat dengan desain yang efisien dan kuat. Solusi
+                                terbaik untuk kebutuhan
+                                transportasi alat berat Anda.</p>
+                            <ul class="list-unstyled mb-3">
+                                <li><i class="bi bi-check2"></i> <span>Desain praktis dan efisien</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Tahan lama dan kuat</span></li>
+                                <li><i class="bi bi-check2"></i> <span>Mempermudah pemuatan alat berat</span></li>
+
+                                <a id="wa-link" href="#" target="_blank" class="btn-get-features">Hubungi Sekarang</a>
+                            </ul>
+                        </div><!-- End feature item-->
+
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Features Cards Section -->
+
+            <!-- Features Section -->
+            <section id="features" class="features section">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2 class="">Autorized Dealer</h2>
+                    <p>Rekan Dealer Terpercaya Kami - Bersama Membangun Kualitas dan Keandalan Untuk Kendaraan Anda</p>
+                </div><!-- End Section Title -->
+
+                <div class="container">
+
+                    <ul class="nav nav-tabs row  g-2 d-flex" data-aos="fade-up" data-aos-delay="100" role="tablist">
+
+                        <li class="nav-item col-3" role="presentation">
+                            <a class="nav-link active show" data-bs-toggle="tab" data-bs-target="#features-tab-1"
+                                aria-selected="true" role="tab">
+                                <h4>Hino</h4>
+                            </a>
+                        </li><!-- End tab nav item -->
+
+                        <li class="nav-item col-3" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-2"
+                                aria-selected="false" tabindex="-1" role="tab">
+                                <h4>Mitsubishi</h4>
+                            </a><!-- End tab nav item -->
+
+                        </li>
+                        <li class="nav-item col-3" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-3"
+                                aria-selected="false" tabindex="-1" role="tab">
+                                <h4>Izuzu</h4>
+                            </a>
+                        </li><!-- End tab nav item -->
+
+                        <li class="nav-item col-3" role="presentation">
+                            <a class="nav-link" data-bs-toggle="tab" data-bs-target="#features-tab-4"
+                                aria-selected="false" tabindex="-1" role="tab">
+                                <h4>Quester</h4>
+                            </a>
+                        </li><!-- End tab nav item -->
+
+                    </ul>
+
+                    <div class="tab-content" data-aos="fade-up" data-aos-delay="200">
+
+                        <div class="tab-pane fade active show" id="features-tab-1" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center" style="align-items: center;">
+                                    <img src="assets/Foto/Hino logo.png" alt="" srcset="" style="width: 300px; height: auto;">
+                                </div>
+                                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                                    <img src="assets/Foto/Hino Unit.png"
+                                        alt="" class="img-fluid">
+                                </div>
+                            </div>
+                        </div><!-- End tab content item -->
+
+                        <div class="tab-pane fade" id="features-tab-2" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center" style="align-items: center;">
+                                    <img src="assets/Foto/Mitsubisi logo.png" alt="" srcset="" style="width: 300px; height: auto;">
+                                </div>
+                                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                                    <img src="assets/Foto/Mitsubhisi unit.png"
+                                        alt="" class="img-fluid">
+                                </div>
+                            </div>
+                        </div><!-- End tab content item -->
+
+                        <div class="tab-pane fade" id="features-tab-3" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center" style="align-items: center;">
+                                    <img src="assets/Foto/Isuzu logo.png" alt="" srcset="" style="width: 300px; height: auto;">
+                                </div>
+                                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                                    <img src="assets/Foto/Isuzu unit.png"
+                                        alt="" class="img-fluid">
+                                </div>
+                            </div>
+                        </div><!-- End tab content item -->
+
+                        <div class="tab-pane fade" id="features-tab-4" role="tabpanel">
+                            <div class="row">
+                                <div class="col-lg-6 order-2 order-lg-1 mt-3 mt-lg-0 d-flex flex-column justify-content-center" style="align-items: center;">                                    
+                                    <img src="assets/Foto/Quester logo.png" alt="" srcset="" style="width: 300px; height: auto;">
+                                </div>
+                                <div class="col-lg-6 order-1 order-lg-2 text-center">
+                                    <img src="assets/Foto/Quester unit.png"
+                                        alt="" class="img-fluid">
+                                </div>
+                            </div>
+                        </div><!-- End tab content item -->
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Features Section -->
+
+            <!-- Parallax Section with Shadow Overlay -->
+            <section class="parallax-section"
+                style="position: relative; background-image: url('assets/Foto/IMG_1484.JPG'); background-attachment: fixed; background-size: cover; background-position: center; padding: 100px 0; color: white; text-align: center;">
+                <!-- Overlay -->
+                <div
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5);">
+                </div>
+
+                <div class="container position-relative info-parallax" style="z-index: 1;">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 ">
+                            <p class="lead mt-4">Mengutamakan Kualitas, Mengedepankan Integritas - Solusi Karoseri
+                                Terbaik untuk
+                                Kendaraan Anda. Dengan pengalaman lebih dari 10 tahun, kami berkomitmen untuk memberikan
+                                hasil
+                                terbaik dengan keahlian khusus dan layanan purna jual yang handal.</p>
+                            <a href="contact.html" class="btn-get-parallax">Hubungi Kami Sekarang</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="services section light-background">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Klien Kami</h2>
+                    <p>Kemitraan yang Kuat, Hasil yang Memuaskan - Klien Kami adalah Fokus Kami</p>
+                </div><!-- End Section Title -->
+
+                <div class="container">
+
+                    <div class="row gy-4 justify-content-center">
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Sinar Wahana Surya Mandiri</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Armada Sejahtera Makmur</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Pusaka Putra Rajawali</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Tenang Jaya</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. SNS Central Nusantara</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Putra Restu Ibu Abadi</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Rejo Agung Trans</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Cahaya Anugerah Logistic</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Bahtera Setia</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Anugerah Mandiri International Trans</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Pulau Lemon</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item  position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. Irma Tiara Putra</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. MAKMUR JAYA BERKAT BERSAMA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. IRMA TIARA PUTRA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. ORANGE JAYA MAKMUR</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. SINAR WAHANA SURYA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. SURYA KENCANA WIJAYA SAKTI</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. SURYA INTI GAS</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. HARAPAN ANDA GROUP</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. PILAR PUTRA MANDIRI</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. PULAU LEMON</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. ANUGERAH MANDIRI INTERNASIONAL TRANS</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. KUNING INDAH PERKASA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. ARMADA BERKAT ANUGRAH</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>CV. CAKRA BESI INDOPRIMA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. ANUGRAH KARTIKA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. REJO AGUNG</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. GREEN ENERGI UTAMA</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. MJJ</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. GEI</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. DOMPU</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. ANGIN TIMUR</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. BSP</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+                        <div class="col-lg-3 col-md-6" data-aos="fade-up" data-aos-delay="100">
+                            <div class="service-item position-relative">
+                                <div class="icon">
+                                    <i class="fa-solid fa-address-card"></i>
+                                </div>
+                                <h3>PT. LANCAR ABADI</h3>
+                            </div>
+                        </div><!-- End Service Item -->
+
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Services Section -->
+
+
+            <!-- Testimonials Section -->
+            <section id="testimonials" class="testimonials section">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Testimoni</h2>
+                    <p>Dengarkan Langsung dari Mereka - Testimoni yang Menggambarkan Keberhasilan Kami</p>
+                </div><!-- End Section Title -->
+
+                <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+                    <div class="swiper init-swiper">
+                        <script type="application/json" class="swiper-config">
+            {
+              "loop": true,
+              "speed": 600,
+              "autoplay": {
+                "delay": 5000
+              },
+              "slidesPerView": "auto",
+              "pagination": {
+                "el": ".swiper-pagination",
+                "type": "bullets",
+                "clickable": true
+              },
+              "breakpoints": {
+                "320": {
+                  "slidesPerView": 1,
+                  "spaceBetween": 40
+                },
+                "1200": {
+                  "slidesPerView": 2,
+                  "spaceBetween": 20
+                }
+              }
+            }
+          </script>
+                        <div class="swiper-wrapper">
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. MAKMUR JAYA BERKAT BERSAMA</h3>
+                                        <h4>CEO</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Kami sangat puas dengan layanan yang diberikan. Kualitas produk dan
+                                                layanan yang sangat baik
+                                                membantu kami meningkatkan efisiensi operasional.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>CV. PRIMA</h3>
+                                        <h4>Founder</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Layanan yang profesional dan responsif. Kami merasa sangat terbantu
+                                                dengan solusi yang diberikan
+                                                dalam menghadapi tantangan bisnis kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. IRMA TIARA PUTRA</h3>
+                                        <h4>Managing Director</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Pelayanan yang cepat dan ramah. Kami sangat menghargai perhatian
+                                                terhadap detail dan dedikasi tim
+                                                dalam memenuhi kebutuhan kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. ORANGE JAYA MAKMUR</h3>
+                                        <h4>Director</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Kami sangat terkesan dengan profesionalisme dan keahlian yang
+                                                ditunjukkan. Pelayanan yang
+                                                diberikan sangat membantu dalam pengembangan bisnis kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. PERTAMINA</h3>
+                                        <h4>CEO</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Layanan yang luar biasa dengan fokus pada kebutuhan pelanggan. Kami
+                                                sangat menghargai dedikasi tim
+                                                dalam memberikan solusi terbaik bagi kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. SINAR WAHANA SURAYA</h3>
+                                        <h4>Managing Director</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Kami menerima pelayanan yang sangat baik dan profesional. Semua
+                                                kebutuhan kami ditangani dengan
+                                                cepat dan efisien.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. SURYA KENCANA WIJAYA SAKTI</h3>
+                                        <h4>Founder</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Tim yang sangat profesional dan berpengetahuan luas. Kami merasa
+                                                sangat terbantu dengan dukungan
+                                                yang diberikan dalam menjalankan bisnis kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. SURYA INTI GAS</h3>
+                                        <h4>CEO</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Kualitas pelayanan yang sangat baik. Kami sangat menghargai kerja
+                                                keras dan dedikasi tim dalam
+                                                memenuhi kebutuhan kami.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. HARAPAN ANDA GROUP</h3>
+                                        <h4>Director</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Pelayanan yang sangat baik dengan perhatian terhadap kebutuhan
+                                                pelanggan. Kami sangat menghargai
+                                                dedikasi dan kerja keras tim.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                            <div class="swiper-slide">
+                                <div class="testimonial-wrap">
+                                    <div class="testimonial-item">
+                                        <h3>PT. PILAR PUTRA MANDIRI</h3>
+                                        <h4>Managing Director</h4>
+                                        <p>
+                                            <i class="bi bi-quote quote-icon-left"></i>
+                                            <span>Layanan yang sangat profesional dan berkualitas. Kami sangat puas
+                                                dengan hasil yang kami terima
+                                                dan akan terus bekerja sama di masa mendatang.</span>
+                                            <i class="bi bi-quote quote-icon-right"></i>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div><!-- End testimonial item -->
+
+                        </div>
+
+                        <div class="swiper-pagination"></div>
+                    </div>
+
+                </div>
+
+            </section><!-- /Testimonials Section -->
+
+            <!-- Recent Blog Posts Section -->
+            <section id="recent-blog-posts" class="recent-blog-posts section">
+
+                <!-- Section Title -->
+                <div class="container section-title" data-aos="fade-up">
+                    <h2>Artikel Kami</h2>
+                    <p>Berita Terbaru dan Insight - Temukan Inspirasi di Blog Kami</p>
+                </div><!-- End Section Title -->
+
+                <div class="container">
+
+                    <div class="row gy-5">
+
+                        <div class="col-xl-4 col-md-6">
+                            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
+
+                                <div class="post-img position-relative overflow-hidden">
+                                    <img src="assets/Foto Tambahan/cd2e9bb2eae450418bc4fbbb9540ada7.jpg"
+                                        class="img-thumbnail border border-0 p-0" alt="">
+                                    <span class="post-date">1 Agustus 2024</span>
+                                </div>
+
+                                <div class="post-content d-flex flex-column">
+
+                                    <h3 class="post-title">Tips Pengoperasian Sistem Hidrolik Dump Truck</h3>
+
+                                    <div class="meta d-flex align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person"></i> <span class="ps-2">Kang Admin</span>
+                                        </div>
+                                        <span class="px-3 text-black-50">/</span>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-folder2"></i> <span class="ps-2">Perawatan</span>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <a href="page-blog2.html" class="readmore stretched-link"><span>Baca Selengkapnya
+                                        </span><i class="bi bi-arrow-right"></i></a>
+
+                                </div>
+
+                            </div>
+                        </div><!-- End post item -->
+
+                        <div class="col-xl-4 col-md-6">
+                            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
+
+                                <div class="post-img position-relative overflow-hidden">
+                                    <img src="assets/Foto/IMG_1435.JPG" class="img-thumbnail border border-0 p-0"
+                                        alt="">
+                                    <span class="post-date">1 Agustus 2024</span>
+                                </div>
+
+                                <div class="post-content d-flex flex-column">
+
+                                    <h3 class="post-title">Manfaat Menggunakan Produk Karoseri yang Berkualitas</h3>
+
+                                    <div class="meta d-flex align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person"></i> <span class="ps-2">Kang Admin</span>
+                                        </div>
+                                        <span class="px-3 text-black-50">/</span>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-folder2"></i> <span class="ps-2">Perawatan</span>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <a href="page-blog3.html" class="readmore stretched-link"><span>Baca Selengkapnya
+                                        </span><i class="bi bi-arrow-right"></i></a>
+
+                                </div>
+
+                            </div>
+                        </div><!-- End post item -->
+
+                        <div class="col-xl-4 col-md-6">
+                            <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
+
+                                <div class="post-img position-relative overflow-hidden">
+                                    <img src="assets/galeri/TERBARU BAHAN/IMG_2253.JPG"
+                                        class="img-thumbnail border border-0 p-0" alt="">
+                                    <span class="post-date">1 Agustus 2024</span>
+                                </div>
+
+                                <div class="post-content d-flex flex-column">
+
+                                    <h3 class="post-title">Tips Perawatan Hidrolik Dump Truck</h3>
+
+                                    <div class="meta d-flex align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-person"></i> <span class="ps-2">Kang Admin</span>
+                                        </div>
+                                        <span class="px-3 text-black-50">/</span>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bi bi-folder2"></i> <span class="ps-2">Perawatan</span>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+
+                                    <a href="page-blog1.html" class="readmore stretched-link"><span>Baca Selengkapnya
+                                        </span><i class="bi bi-arrow-right"></i></a>
+
+                                </div>
+
+                            </div>
+                        </div><!-- End post item -->
+
+                    </div>
+
+                </div>
+
+            </section><!-- /Recent Blog Posts Section -->
+
+        </main>
+
+        <footer id="footer" class="footer dark-background">
+
+            <div class="container footer-top">
+                <div class="row gy-4">
+                    <div class="col-lg-5 col-md-5 footer-about">
+                        <a href="index.php" class="logo d-flex align-items-center">
+                            <span class="sitename">Mandiri Kerja Abadi</span>
+                        </a>
+                        <div class="footer-contact pt-3">
+                            <p>JL. Raya Jabon No : 6, Jokodayo Jabon, Kecamatan Mojoanyar, Kabupaten Mojokerto, Provinsi Jawa Timur</p>
+                            <p class="mt-3"><strong>Phone : </strong> <span>0812-2222-8543</span></p>
+                            <p><strong>Email : </strong> <span>karoserimandirikerjaabadi@gmail.com</span></p>
+                        </div>
+                        <div class="social-links d-flex mt-4">
+                            <a href="https://www.tiktok.com/@karoseri_mka?_t=8oXG6z4FaFt&_r=1" class="me-2"><i
+                                    class="bi bi-tiktok"></i></a>
+                            <a href="https://www.facebook.com/profile.php?id=100072235188741&mibextid=ZbWKwL"
+                                class="me-2"><i class="bi bi-facebook"></i></a>
+                            <a href="https://www.instagram.com/karoserimandirikerjaabadi?igsh=MXJ5cTc4bDhvbjJjbQ=="
+                                class="me-2"><i class="bi bi-instagram"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1 col-md-1"></div>
+
+                    <div class="col-lg-3 col-md-3 footer-links">
+                        <h4>Direction</h4>
+                        <ul>
+                            
+                            <li><a href="#">Beranda</a></li>
+                            <li><a href="about.html">Tentang Kami</a></li>
+                            <li><a href="services.html">Layanan</a></li>
+                            <li><a href="projects.html">Proyek</a></li>
+                            <li><a href="blog.html">Artikel</a></li>
+                            <li><a href="galeri.html">Galeri</a></li>
+                            <li><a href="contact.html">Kontak</a></li>
+                            <li><a href="after-sales.html">Purna Jual</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 footer-hours">
+                        <h4>Jam Operasional</h4>
+                        <p>
+                            <strong>Senin - Jumat : </strong> 08:00 - 17:00 <br>
+                            <strong>Sabtu : </strong> 08:00 - 14:00 <br>
+                            <strong>Minggu : </strong> Tutup
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container text-center mt-4">
+                <div class="row">
+                    <div class="col">
+                        <p>© <span>Copyright</span> <strong class="px-1 sitename">Mandiri Kerja Abadi</strong> <span>All
+                                Rights
+                                Reserved
+                            </span>
+                         </p>
+                    </div>
+                </div>
+            </div>
+
+        </footer>
+
+        <!-- Scroll Top -->
+        <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i
+                class="bi bi-arrow-up-short"></i></a>
+
+        <!-- Preloader -->
+        <div id="preloader"></div>
+
+        <!-- Vendor JS Files -->
+        <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/vendor/aos/aos.js"></script>
+        <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+        <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+        <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+        <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+        <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+
+        <!-- Main JS File -->
+        <script src="assets/js/main.js"></script>
+
+        <script src="script.js"></script>
+
+        <script>
+            // menunhggu semua konten halaman di load dan menambahkan even 
+     document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('postAnggota').addEventListener('submit', function (event) {
+       // menampilkan loading
+        document.querySelector('.loading').style.display = 'block';
+
+        
+       // menunda esekusi kode ddan memunculkan pesan
+        setTimeout(function () {
+          
+            document.querySelector('.loading').style.display = 'none';
+
+
+            document.querySelector('.sent-message').style.display = 'block';
+
+            
+            setTimeout(function () {
+                document.querySelector('.sent-message').style.display = 'none';
+            }, 3000); 
+        }, 2000); 
+    });
+});
+
+        </script>
+    </body>
+
+</html>
