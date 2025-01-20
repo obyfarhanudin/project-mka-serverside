@@ -356,61 +356,6 @@ if (isset($_POST["submit"])) {
                             </div>
                         </div><!-- End Card Item -->
 
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-                            <div class="card-item">
-                                <div class="row">
-                                    <div class="col-xl-5">
-                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1893.JPG" alt=""></div>
-                                    </div>
-                                    <div class="col-xl-7 d-flex align-items-center">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Repair Karoseri</h4>
-                                            <p>Perbaikan profesional dan berkualitas: Layanan repair karoseri yang
-                                                memastikan kendaraan Anda kembali berfungsi optimal
-                                                dan tampil seperti baru.</p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Card Item -->
-
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
-                            <div class="card-item">
-                                <div class="row">
-                                    <div class="col-xl-5">
-                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1812.JPG" alt=""></div>
-                                    </div>
-                                    <div class="col-xl-7 d-flex align-items-center">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Pengecatan Karoseri</h4>
-                                            <p>Pengecatan profesional dan tahan lama: Memberikan lapisan cat yang
-                                                berkualitas tinggi untuk melindungi dan memperindah
-                                                kendaraan Anda.</p>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Card Item -->
-
-                        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-                            <div class="card-item">
-                                <div class="row">
-                                    <div class="col-xl-5">
-                                        <div class="card-bg"><img src="assets/Foto Tambahan/IMG_1813.JPG" alt=""></div>
-                                    </div>
-                                    <div class="col-xl-7 d-flex align-items-center">
-                                        <div class="card-body">
-                                            <h4 class="card-title">Pesanan Lainnya</h4>
-                                            <p>Menangani berbagai pesanan khusus: Menyediakan layanan karoseri untuk
-                                                berbagai jenis kebutuhan dan spesifikasi.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Card Item -->
-
                     </div>
 
                 </div>
