@@ -369,7 +369,7 @@ if (isset($_POST["submit"])) {
 
                     <div class="row justify-content-around gy-4">
                         <div class="features-image col-lg-6" data-aos="fade-up" data-aos-delay="100"><img
-                                src="assets/tambahan/MKA-COMPANNY.png" alt=""></div>
+                                src="assets/tambahan/MKA-COMPANY.png" alt=""></div>
 
                         <div class="col-lg-5 d-flex flex-column justify-content-center" data-aos="fade-up"
                             data-aos-delay="200">
